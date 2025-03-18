@@ -1,19 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  email: "",
-  jwtToken: "",
-};
-
-const loginInfoSlice = createSlice({
+export const loginInfoSlice = createSlice({
   name: "loginInfo",
-  initialState,
+  initialState: {
+    email: null,
+    user: null,
+  },
   reducers: {
-    addEmail(state, action) {
+    setEmail: (state, action) => {
       state.email = action.payload;
+    },
+    clearEmail: (state) => {
+      state.email = null;
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    clearUser: (state) => {
+      state.user = null;
     },
   },
 });
 
-export const { addEmail } = loginInfoSlice.actions;
+export const { setUser, clearUser } = loginInfoSlice.actions;
+
 export default loginInfoSlice.reducer;

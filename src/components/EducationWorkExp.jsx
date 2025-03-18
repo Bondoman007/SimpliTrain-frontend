@@ -58,8 +58,8 @@ const EducationWorkExp = () => {
   };
 
   const EducationEntry = ({ entry }) => (
-    <div className="flex items-start py-4 px-2">
-      <div className="bg-gray-100 w-20 h-16 rounded"></div>
+    <div className="flex items-start py-4 px-2 max-w-3xl">
+      <div className=" w-20 h-16 rounded"></div>
       <div className="ml-4 flex-grow">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-medium text-gray-800">
@@ -113,7 +113,7 @@ const EducationWorkExp = () => {
   );
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-gray-50 min-h-screen">
+    <div className="max-w-3xl mx-auto p-4  min-h-screen">
       <Section title="Education" onAdd={addEducation}>
         {education.map((edu) => (
           <EducationEntry key={edu.id} entry={edu} />

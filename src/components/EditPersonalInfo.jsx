@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
-const EditPersonalInfo = ({ info, onClose, onSave }) => {
+import { useDispatch } from "react-redux";
+import { updatePersonalInfo } from "../redux/profileSlice";
+
+const EditPersonalInfo = ({ info, onClose }) => {
   const [formData, setFormData] = useState(info);
+  const dispatch = useDispatch();
+
   async function handleData(formData) {
     const fullAddress = `${formData.street}, ${formData.city}, ${formData.state}, ${formData.pincode}, ${formData.country}`;
 
@@ -16,7 +21,15 @@ const EditPersonalInfo = ({ info, onClose, onSave }) => {
       });
 
       console.log("Profile Updated:", res.data);
-      onSave(res.data?.data);
+
+      // ✅ Update Redux Store
+      dispatch(
+        updatePersonalInfo({
+          ...formData,
+          address: fullAddress,
+        })
+      );
+
       onClose();
     } catch (error) {
       console.error(
@@ -25,6 +38,7 @@ const EditPersonalInfo = ({ info, onClose, onSave }) => {
       );
     }
   }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white rounded-lg w-full max-w-xl p-6">
@@ -45,32 +59,30 @@ const EditPersonalInfo = ({ info, onClose, onSave }) => {
           }}
         >
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                First Name
-              </label>
-              <input
-                type="text"
-                value={formData.firstName}
-                onChange={(e) =>
-                  setFormData({ ...formData, firstName: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Last Name
-              </label>
-              <input
-                type="text"
-                value={formData.lastName}
-                onChange={(e) =>
-                  setFormData({ ...formData, lastName: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
+            {[
+              "firstName",
+              "lastName",
+              "age",
+              "street",
+              "city",
+              "state",
+              "pincode",
+              "country",
+            ].map((field) => (
+              <div key={field}>
+                <label className="block text-sm text-gray-600 mb-1">
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
+                <input
+                  type={field === "age" ? "number" : "text"}
+                  value={formData[field]}
+                  onChange={(e) =>
+                    setFormData({ ...formData, [field]: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border rounded-lg"
+                />
+              </div>
+            ))}
 
             <div>
               <label className="block text-sm text-gray-600 mb-1">Gender</label>
@@ -85,89 +97,6 @@ const EditPersonalInfo = ({ info, onClose, onSave }) => {
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
               </select>
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Age</label>
-              <input
-                type="number"
-                value={formData.age}
-                onChange={(e) =>
-                  setFormData({ ...formData, age: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Address
-              </label>
-              <input
-                type="text"
-                value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Street</label>
-              <input
-                type="text"
-                value={formData.street}
-                onChange={(e) =>
-                  setFormData({ ...formData, street: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">City</label>
-              <input
-                type="text"
-                value={formData.city}
-                onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">State</label>
-              <input
-                type="text"
-                value={formData.state}
-                onChange={(e) =>
-                  setFormData({ ...formData, state: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Pincode
-              </label>
-              <input
-                type="text"
-                value={formData.pincode}
-                onChange={(e) =>
-                  setFormData({ ...formData, pincode: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">
-                Country
-              </label>
-              <input
-                type="text"
-                value={formData.country}
-                onChange={(e) =>
-                  setFormData({ ...formData, country: e.target.value })
-                }
-                className="w-full px-3 py-2 border rounded-lg"
-              />
             </div>
           </div>
 

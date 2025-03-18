@@ -15,7 +15,7 @@ const ProfileSidebar = () => {
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-md max-w-md mx-auto">
+    <div className="bg-white rounded-3xl shadow-md  ">
       <div className="flex flex-col items-center pt-6 pb-8 px-6">
         {/* Profile Image Section */}
         <div className="relative mb-4">

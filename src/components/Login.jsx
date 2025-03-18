@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
-import { addEmail } from "../store/loginInfoSlice";
+import axios from "axios";
+import { setUser } from "../store/loginInfoSlice"; // Adjust the import path as needed
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(true);
-
+  const [isLogin, setIsLogin] = React.useState(true);
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };
@@ -60,15 +61,40 @@ const Login = () => {
 };
 
 const LoginForm = () => {
-  const email = useRef("");
+  const emailRef = useRef("");
+  const passwordRef = useRef("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/login",
+        {
+          emailId: emailRef.current.value,
+          password: passwordRef.current.value,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(setUser(response.data.user)); // Save user data to Redux store
+      alert("Login successful!");
+      navigate("/profile");
+    } catch (error) {
+      alert("Failed to login");
+      console.error(error);
+    }
+  };
+
   return (
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <h2 className="text-2xl font-bold mb-6">Login</h2>
 
       <div>
         <input
-          ref={email}
+          ref={emailRef}
           type="email"
           placeholder="Email"
           className="w-full px-4 py-3 rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
@@ -78,6 +104,7 @@ const LoginForm = () => {
 
       <div>
         <input
+          ref={passwordRef}
           type="password"
           placeholder="Password"
           className="w-full px-4 py-3 rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
@@ -99,7 +126,6 @@ const LoginForm = () => {
       </div>
 
       <button
-        onClick={dispatch(addEmail())}
         type="submit"
         className="w-full bg-gray-800 text-white py-3 rounded hover:bg-gray-700 transition duration-200"
       >
@@ -110,13 +136,47 @@ const LoginForm = () => {
 };
 
 const SignupForm = () => {
+  const firstNameRef = useRef("");
+  const lastNameRef = useRef("");
+  const emailRef = useRef("");
+  const passwordRef = useRef("");
+  const phoneRef = useRef("");
+  const genderRef = useRef("");
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/signup",
+        {
+          firstName: firstNameRef.current.value,
+          lastName: lastNameRef.current.value,
+          emailId: emailRef.current.value,
+          password: passwordRef.current.value,
+          phone: phoneRef.current.value,
+          gender: genderRef.current.value,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(setUser(response.data.user)); // Save user data to Redux store
+      alert("Signup successful!");
+    } catch (error) {
+      alert("Failed to signup");
+      console.error(error);
+    }
+  };
+
   return (
-    <form className="space-y-4">
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <h2 className="text-2xl font-bold mb-6">Sign Up</h2>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <input
+            ref={firstNameRef}
             type="text"
             placeholder="First Name"
             className="w-full px-4 py-3 rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
@@ -125,6 +185,7 @@ const SignupForm = () => {
         </div>
         <div>
           <input
+            ref={lastNameRef}
             type="text"
             placeholder="Last Name"
             className="w-full px-4 py-3 rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
@@ -135,6 +196,7 @@ const SignupForm = () => {
 
       <div>
         <input
+          ref={emailRef}
           type="email"
           placeholder="Email"
           className="w-full px-4 py-3 rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
@@ -144,6 +206,7 @@ const SignupForm = () => {
 
       <div>
         <input
+          ref={passwordRef}
           type="password"
           placeholder="Password"
           className="w-full px-4 py-3 rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
@@ -153,6 +216,7 @@ const SignupForm = () => {
 
       <div>
         <input
+          ref={phoneRef}
           type="tel"
           placeholder="Phone Number"
           className="w-full px-4 py-3 rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
@@ -162,6 +226,7 @@ const SignupForm = () => {
 
       <div>
         <select
+          ref={genderRef}
           className="w-full px-4 py-3 rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0 text-gray-500"
           required
         >
@@ -179,7 +244,7 @@ const SignupForm = () => {
         type="submit"
         className="w-full bg-gray-800 text-white py-3 rounded hover:bg-gray-700 transition duration-200"
       >
-        ADD
+        SIGN UP
       </button>
     </form>
   );

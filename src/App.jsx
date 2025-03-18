@@ -1,21 +1,31 @@
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
-import { increment } from "./store/counterSlice";
 import Navbar from "./components/Navbar";
 import EducationWorkExp from "./components/EducationWorkExp";
 import PersonalInformation from "./components/PersonalInformation";
 import ProfileSidebar from "./components/ProfileSidebar";
+import { Routes, Route } from "react-router-dom";
+import Login from "./components/Login";
 function App() {
   const dispatch = useDispatch();
-  const countInfo = useSelector((store) => store.counter.value);
 
   return (
     <>
-      <div>
-        <Navbar />
-        <EducationWorkExp />
-        <PersonalInformation />
+      <Navbar />
+
+      <div className="flex justify-center mt-3 px-4">
+        {/* Sidebar should not stretch too much */}
+
         <ProfileSidebar />
+
+        {/* Main content with equal spacing */}
+        <div className="flex flex-row gap-6 ">
+          <PersonalInformation />
+
+          {/* <div className="flex-1">
+            <EducationWorkExp />
+          </div> */}
+        </div>
       </div>
     </>
   );

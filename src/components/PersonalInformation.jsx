@@ -48,6 +48,7 @@
 
 import React, { useState } from "react";
 import { Pencil } from "lucide-react";
+import EducationWorkExp from "../components/EducationWorkExp";
 
 const PersonalInformation = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,8 +80,8 @@ const PersonalInformation = () => {
   };
 
   return (
-    <div className="bg-gray-200 min-h-screen p-4">
-      <div className="bg-white rounded-lg shadow-sm p-6 max-w-2xl mx-auto">
+    <div className=" max-h-screen p-4">
+      <div className="bg-white rounded-lg shadow-sm p-6 max-w-3xl mx-auto">
         <h2 className="text-lg font-semibold mb-4">Personal Information</h2>
         <div className="flex justify-end mb-2">
           <button className="text-gray-500 text-sm flex items-center">
@@ -264,6 +265,7 @@ const PersonalInformation = () => {
           </div>
         </div>
       </div>
+      <EducationWorkExp />
     </div>
   );
 };
