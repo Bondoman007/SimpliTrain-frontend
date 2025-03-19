@@ -13,7 +13,7 @@ function App() {
     <>
       <Navbar />
 
-      <div className="flex justify-center mt-3 px-4">
+      <div className="flex flex-row justify-center mt-3 px-4">
         {/* Sidebar should not stretch too much */}
 
         <ProfileSidebar />

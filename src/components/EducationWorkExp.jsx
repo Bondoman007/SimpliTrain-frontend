@@ -1,65 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const EducationWorkExp = () => {
-  const [education, setEducation] = useState([
-    {
-      id: 1,
-      institution: "Imperial College London",
-      degree: "Masters in Marketing",
-      graduationDate: "march 2020",
-      startDate: "March 2016",
-      endDate: "June 2018",
-    },
-    {
-      id: 2,
-      institution: "MIT University",
-      degree: "Bachelor's degree in Engineering and Technology",
-      graduationDate: "march 2020",
-      startDate: "March 2012",
-      endDate: "June 2016",
-    },
-  ]);
+const EducationWorkExp = ({
+  education: propEducation,
+  workExperience: propWorkExperience,
+}) => {
+  const [education, setEducation] = useState([]);
+  const [workExperience, setWorkExperience] = useState([]);
 
-  const [workExperience, setWorkExperience] = useState([
-    {
-      id: 1,
-      title: "Software Engineer",
-      company: "Amazon",
-      startDate: "July 2018",
-      endDate: "Present",
-    },
-  ]);
+  // Update state when props change
+  useEffect(() => {
+    setEducation(propEducation || []);
+    setWorkExperience(propWorkExperience || []);
+  }, [propEducation, propWorkExperience]);
 
   const addEducation = () => {
     const newEducation = {
-      id:
-        education.length > 0 ? Math.max(...education.map((e) => e.id)) + 1 : 1,
+      _id: Date.now().toString(), // Temporary ID (MongoDB will generate on save)
       institution: "",
       degree: "",
-      graduationDate: "",
-      startDate: "",
-      endDate: "",
+      from: "",
+      to: "",
     };
     setEducation([...education, newEducation]);
   };
 
   const addWorkExperience = () => {
     const newWorkExperience = {
-      id:
-        workExperience.length > 0
-          ? Math.max(...workExperience.map((w) => w.id)) + 1
-          : 1,
-      title: "",
+      _id: Date.now().toString(), // Temporary ID
+      jobTitle: "",
       company: "",
-      startDate: "",
-      endDate: "",
+      from: "",
+      to: "",
     };
     setWorkExperience([...workExperience, newWorkExperience]);
   };
 
   const EducationEntry = ({ entry }) => (
     <div className="flex items-start py-4 px-2 max-w-3xl">
-      <div className=" w-20 h-16 rounded"></div>
+      <div className="w-20 h-16 rounded bg-gray-200"></div>
       <div className="ml-4 flex-grow">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-medium text-gray-800">
@@ -69,11 +47,9 @@ const EducationWorkExp = () => {
             Edit <span className="inline-block ml-1">✏️</span>
           </button>
         </div>
-        <p className="text-sm text-gray-600">
-          {entry.degree}, graduated on {entry.graduationDate}
-        </p>
+        <p className="text-sm text-gray-600">{entry.degree}</p>
         <p className="text-sm text-gray-500">
-          {entry.startDate} - {entry.endDate}
+          {entry.from} - {entry.to}
         </p>
       </div>
     </div>
@@ -84,14 +60,16 @@ const EducationWorkExp = () => {
       <div className="bg-gray-100 w-20 h-16 rounded"></div>
       <div className="ml-4 flex-grow">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium text-gray-800">{entry.title}</h3>
+          <h3 className="text-lg font-medium text-gray-800">
+            {entry.jobTitle}
+          </h3>
           <button className="text-gray-500 hover:text-gray-700">
             Edit <span className="inline-block ml-1">✏️</span>
           </button>
         </div>
         <p className="text-sm text-gray-600">{entry.company}</p>
         <p className="text-sm text-gray-500">
-          {entry.startDate} - {entry.endDate}
+          {entry.from} - {entry.to}
         </p>
       </div>
     </div>
@@ -113,17 +91,25 @@ const EducationWorkExp = () => {
   );
 
   return (
-    <div className="max-w-3xl mx-auto p-4  min-h-screen">
+    <div className="max-w-3xl mx-auto p-4 min-h-screen">
       <Section title="Education" onAdd={addEducation}>
-        {education.map((edu) => (
-          <EducationEntry key={edu.id} entry={edu} />
-        ))}
+        {education.length > 0 ? (
+          education.map((edu) => <EducationEntry key={edu._id} entry={edu} />)
+        ) : (
+          <p className="text-gray-500 text-sm">
+            No education details available.
+          </p>
+        )}
       </Section>
 
       <Section title="Work Experience" onAdd={addWorkExperience}>
-        {workExperience.map((work) => (
-          <WorkExperienceEntry key={work.id} entry={work} />
-        ))}
+        {workExperience.length > 0 ? (
+          workExperience.map((work) => (
+            <WorkExperienceEntry key={work._id} entry={work} />
+          ))
+        ) : (
+          <p className="text-gray-500 text-sm">No work experience available.</p>
+        )}
       </Section>
     </div>
   );

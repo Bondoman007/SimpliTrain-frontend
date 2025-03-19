@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { updatePersonalInfo } from "../redux/profileSlice";
+// import { updatePersonalInfo } from "../redux/profileSlice";
 
 const EditPersonalInfo = ({ info, onClose }) => {
   const [formData, setFormData] = useState(info);
@@ -12,23 +12,29 @@ const EditPersonalInfo = ({ info, onClose }) => {
     const fullAddress = `${formData.street}, ${formData.city}, ${formData.state}, ${formData.pincode}, ${formData.country}`;
 
     try {
-      const res = await axios.patch("http://localhost:5000/api/profile/edit", {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        age: formData.age,
-        gender: formData.gender,
-        address: fullAddress,
-      });
+      const res = await axios.patch(
+        "http://localhost:5000/api/profile/edit",
+        {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          age: formData.age,
+          gender: formData.gender,
+          address: fullAddress,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       console.log("Profile Updated:", res.data);
 
       // ✅ Update Redux Store
-      dispatch(
-        updatePersonalInfo({
-          ...formData,
-          address: fullAddress,
-        })
-      );
+      // dispatch(
+      //   updatePersonalInfo({
+      //     ...formData,
+      //     address: fullAddress,
+      //   })
+      // );
 
       onClose();
     } catch (error) {
@@ -40,7 +46,7 @@ const EditPersonalInfo = ({ info, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-opacity-10 backdrop-blur-xs flex items-center justify-center">
       <div className="bg-white rounded-lg w-full max-w-xl p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Edit Personal Information</h2>
